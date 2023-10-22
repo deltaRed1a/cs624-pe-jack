@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import Heading from './Heading';
 import Input from './Input';
+import Button from './Button';
+
+let todoIndex = 0
 
 class App extends Component {
   constructor() {
@@ -10,16 +13,33 @@ class App extends Component {
       inputValue: '',
       todos: [],
       type: 'All'
-    };
+    }
+  this.submitTodo = this.submitTodo.bind(this)
   }
-
+  
   inputChange(inputValue) {
     console.log(' Input Value: ', inputValue);
     this.setState({inputValue});
   }
 
+  submitTodo() {   
+    if (this.state.inputValue.match(/^\s*$/)) {   
+      return  
+    }    
+    const todo = {      
+      title: this.state.inputValue,      
+      todoIndex,     
+      complete: false      
+    }      
+    todoIndex++      
+    const todos = [...this.state.todos, todo]     
+    this.setState({ todos, inputValue: '' }, () => {     
+      console.log('State: ', this.state)     
+    }) 
+  }
+
   render() {
-    const {inputValue}= this.state;
+    let {inputValue}= this.state;
     return (
       <View style={styles.container}>
         <ScrollView keyboardShouldPersistTaps='always'
@@ -30,6 +50,7 @@ class App extends Component {
             inputChange={text => this.inputChange(text)}
           />
           <View/>
+        <Button submitTodo={this.submitTodo} />
         </ScrollView>
       </View>
     )
