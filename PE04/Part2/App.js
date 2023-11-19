@@ -5,7 +5,8 @@ import { Image, Platform, StyleSheet, Text, TouchableHighlight, View } from 'rea
 
 const userImage = require('./user.png');
 
-const data = [{
+// Initialize data for 6 profile cards
+const initialData = Array.from({ length: 6 }).fill({
   image: userImage,
   name: 'John Doe',
   occupation: 'React Native Developer',
@@ -13,7 +14,7 @@ const data = [{
     'He loves using JS to build React Native applications ' +
     'for iOS and Android',
   showThumbnail: true
-}];
+});
 
 const ProfileCard = (props) => {
   const { image, name, occupation, description, onPress, showThumbnail } = props;
@@ -59,10 +60,10 @@ ProfileCard.propTypes = {
 };
 
 export default class App extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
-      data: data
+      data: initialData
     };
   }
 
@@ -100,18 +101,21 @@ const profileCardColor = 'dodgerblue';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row', // Set flexDirection to row to align cards side by side
+    flexWrap: 'wrap', // Allow wrapping for multiple rows
     justifyContent: 'center',
     alignItems: 'center'
   },
   cardContainer: {
+    margin: 10, // Add margin for spacing between cards
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 3,
     borderStyle: 'solid',
     borderRadius: 20,
     backgroundColor: profileCardColor,
-    width: 300,
-    height: 400,
+    width: 150, // Adjust width for smaller cards
+    height: 200, // Adjust height for smaller cards
     ...Platform.select({
       ios: {
         shadowColor: 'black',
@@ -130,51 +134,42 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 3,
     borderColor: 'black',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginTop: 30,
+    width: 80, // Adjust width for smaller image container
+    height: 80, // Adjust height for smaller image container
+    borderRadius: 40, // Make it round
+    marginTop: 15,
     paddingTop: 15,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: {
-          height: 10,
-        },
-        shadowOpacity: 1
-      },
-      android: {
-        elevation: 15
-      }
-    }),
+    overflow: 'hidden', // Ensure the image doesn't overflow the rounded borders
   },
   cardImage: {
     width: 80,
     height: 80
   },
-  cardName: { 
+  cardName: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 24,
-    marginTop: 30,
+    fontSize: 18, // Adjust font size for smaller cards
+    marginTop: 10,
   },
-  cardOccupationContainer: { 
+  cardOccupationContainer: {
     borderColor: 'black',
     borderBottomWidth: 3
   },
-  cardOccupation: { 
+  cardOccupation: {
     fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5, // Reduce margin for smaller cards
+    marginBottom: 5,
   },
   cardDescription: {
     fontStyle: 'italic',
-    marginTop: 10,
-    marginRight: 40,
-    marginLeft: 40,
-    marginBottom: 10
+    fontSize: 12, // Adjust font size for smaller cards
+    marginTop: 5,
+    marginHorizontal: 5, // Adjust horizontal margin
+    marginBottom: 5
   },
   cardThumbnail: {
-    transform: [{ scale: 0.2 }]
+    width: 80, // Set fixed width for thumbnail
+    height: 100, // Set fixed height for thumbnail
+    transform: [{ scale: 1 }] // Set scale back to 1 to show full size
   },
 });
