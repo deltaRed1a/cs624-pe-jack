@@ -1,89 +1,64 @@
-// Listing 6.5 AddCity tab
-// Listing 6.6 AddCity tab
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import uuidV4 from 'uuid/v4'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  ScrollView
+} from 'react-native'
+
+import CenterMessage from '../components/CenterMessage'
+
 import { colors } from '../theme'
 
-class AddCity extends React.Component {
-  state = {
-    city: '',
-    country: ''
-  }
-  onChangeText = (key, value) => {
-    this.setState({ [key]: value })
-  }
-  submit = () => {
-    if (this.state.city === '' || this.state.country === '') alert('please complete form')
-    const city = {
-      city: this.state.city,
-      country: this.state.country,
-      id: uuidV4(),
-      locations: []
+export default class Cities extends React.Component {
+  static navigationOptions = {
+    title: 'Cities',
+    headerTitleStyle: {
+      color: 'white',
+      fontSize: 20,
+      fontWeight: '400'
     }
-    this.props.route.params.addCity(city)
-    this.setState({
-      city: '',
-      country: ''
-    }, () => {
-      this.props.navigation.navigate('Cities')
-    })
+  }
+  navigate = (item) => {   
+    this.props.navigation.navigate('City', { city: item })
   }
   render() {
+    const { screenProps: { cities } } = this.props
     return (
-      <View style={styles.container}>
-        <Text style={styles.heading}>Cities</Text>
-        <TextInput
-          placeholder='City name'
-          onChangeText={val => this.onChangeText('city', val)}
-          style={styles.input}
-          value={this.state.city}
-        />
-        <TextInput
-          placeholder='Country name'
-          onChangeText={val => this.onChangeText('country', val)}
-          style={styles.input}
-          value={this.state.country}
-        />
-        <TouchableOpacity onPress={this.submit}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Add City</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <ScrollView  contentContainerStyle={[!cities.length && { flex: 1 }]}>
+        <View style={[!cities.length && 
+                      { justifyContent: 'center', flex: 1 }]}>
+        {  
+          !cities.length && <CenterMessage message='No saved cities!'/>
+        }
+        {  
+          cities.map((item, index) => (
+            <TouchableWithoutFeedback 
+              onPress={() => this.navigate(item)} key={index} >
+              <View style={styles.cityContainer}>
+                <Text style={styles.city}>{item.city}</Text>
+                <Text style={styles.country}>{item.country}</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          ))
+        }
+        </View>
+      </ScrollView>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  button: {
-    height: 50,
-    backgroundColor: '#666',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10
+  cityContainer: {
+    padding: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.primary
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 18
+  city: {
+    fontSize: 20,
   },
-  heading: {
-    color: 'white',
-    fontSize: 40,
-    marginBottom: 10,
-    alignSelf: 'center'
-  },
-  container: {
-    backgroundColor: colors.primary,
-    flex: 1,
-    justifyContent: 'center'
-  },
-  input: {
-    margin: 10,
-    backgroundColor: 'white',
-    paddingHorizontal: 8,
-    height: 50
-  }
+  country: {
+    color: 'rgba(0, 0, 0, .5)'
+  },  
 })
-
-export default AddCity
