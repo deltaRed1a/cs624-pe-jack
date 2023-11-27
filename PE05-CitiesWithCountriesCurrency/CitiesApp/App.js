@@ -12,13 +12,15 @@ LogBox.ignoreLogs([
 import Cities from './src/Cities/Cities'
 import City from './src/Cities/City'
 import AddCity from './src/AddCity/AddCity'
+import AddCountry from './src/AddCountry/AddCountry' // Add this line
+import Countries from './src/Countries/Countries' // Add this line
 
 import { colors } from './src/theme'
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function CitiesStackScreen ({navigation, route}){
+function CitiesStackScreen({ navigation, route }) {
     return (
       <Stack.Navigator screenOptions={{
         headerStyle: {
@@ -26,22 +28,23 @@ function CitiesStackScreen ({navigation, route}){
         },
         headerTintColor: '#fff'
       }}>
-      <Stack.Screen name="Cities" component={Cities} initialParams={{
-        cities: route.params.cities,
-        addCity: route.params.addCity,
-        addLocation: route.params.addLocation}} />
-      <Stack.Screen name="City" component={City} initialParams={{
-        cities: route.params.cities,
-        addCity: route.params.addCity,
-        addLocation: route.params.addLocation}}/>
+        <Stack.Screen name="Cities" component={Cities} initialParams={{
+          cities: route.params.cities,
+          addCity: route.params.addCity,
+          addLocation: route.params.addLocation}} />
+        <Stack.Screen name="City" component={City} initialParams={{
+          cities: route.params.cities,
+          addCity: route.params.addCity,
+          addLocation: route.params.addLocation}}/>
       </Stack.Navigator>
     );
 }
 
+
 export default class App extends Component {
   state = {
-    cities: []
-
+    cities: [],
+  countries: []
   }
   addCity = (city) => {
     const cities = this.state.cities
@@ -63,12 +66,29 @@ export default class App extends Component {
       cities
     })
   }
-  render() {
+  
+  addCountry = (country) => { // Add this method
+    const countries = this.state.countries
+    countries.push(country)
+    this.setState({ countries })
+  }
+
+   render() {
     return (
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="CitiesNav" initialParams={{cities: this.state.cities,addCity: this.addCity,addLocation: this.addLocation}} component={CitiesStackScreen} />
-          <Tab.Screen name="AddCity"   initialParams={{cities: this.state.cities,addCity: this.addCity,addLocation: this.addLocation}} component={AddCity} />
+          <Tab.Screen name="CitiesNav" 
+            initialParams={{ cities: this.state.cities, addCity: this.addCity, addLocation: this.addLocation }} 
+            component={CitiesStackScreen} />
+          <Tab.Screen name="AddCity" 
+            initialParams={{ cities: this.state.cities, addCity: this.addCity, addLocation: this.addLocation }} 
+            component={AddCity} />
+          <Tab.Screen name="Countries" // Add this line
+            initialParams={{ countries: this.state.countries }} // Add this line
+            component={Countries} /> // Add this line
+          <Tab.Screen name="AddCountry" // Add this line
+            initialParams={{ addCountry: this.addCountry }} // Add this line
+            component={AddCountry} /> // Add this line
         </Tab.Navigator>
       </NavigationContainer>
     );
